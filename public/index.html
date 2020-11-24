@@ -6,6 +6,43 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Hello World!</h1>
+  <h1>To-Do List App</h1>
+  <form>
+    <p>
+      <label for="item">item</label>
+      <input type="text" name="item" id="item">
+    </p>
+    <p>
+      <button id="addItem">Add Item</button>
+    </p>
+  </form>
+  <ul id="items"></ul>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+
+    axios.get('/api/items')
+      .then(({ data: items }) => {
+        items.forEach(item => {
+          let itemElem = document.createElement('li')
+          itemElem.textContent = item
+          document.getElementById('items').append(itemElem)
+        })
+      })
+      .catch(err => console.error(err))
+
+    document.getElementById('addItem').addEventListener('click', event => {
+      event.preventDefault()
+      let item = document.getElementById('item').value
+      axios.post('/api/items', { item })
+        .then(() => {
+          let itemElem = document.createElement('li')
+          itemElem.textContent = item
+          document.getElementById('items').append(itemElem)
+          document.getElementById('item').value = ''
+        })
+        .catch(err => console.error(err))
+    })
+
+  </script>
 </body>
 </html>
